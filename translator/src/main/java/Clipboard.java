@@ -6,7 +6,7 @@ import java.awt.event.KeyEvent;
 import java.awt.datatransfer.Clipboard;
 import java.io.IOException;
 
-class TakeClipboard{
+class Buffer{
     private static void copy(){
         Robot robot = null;
         try {
@@ -19,22 +19,25 @@ class TakeClipboard{
         robot.keyRelease(KeyEvent.VK_CONTROL);
         robot.keyRelease(KeyEvent.VK_C);
     }
-
-
-
-    public static void main(String[] args) throws IOException, UnsupportedFlavorException, InterruptedException {
+    private static String takeClipboard()throws IOException, UnsupportedFlavorException, InterruptedException{
         String new_res = null;
         String old_res = null;
         Clipboard old_clip = Toolkit.getDefaultToolkit().getSystemClipboard();
         old_res = (String) old_clip.getData(DataFlavor.stringFlavor);
         new_res = old_res;
         copy();
-        while(old_res.equals(new_res)) {
+        while(old_res.equals(new_res)) { //потенциальная проблема
             Thread.sleep(20);
             Clipboard new_clip = Toolkit.getDefaultToolkit().getSystemClipboard();
             new_res = (String) new_clip.getData(DataFlavor.stringFlavor);
         }
-        System.out.println(new_res);
+        return new_res;
+    }
+
+
+    public static void main(String[] args) throws IOException, UnsupportedFlavorException, InterruptedException {
+        String buffer = takeClipboard();
+        System.out.println(buffer);
     }
 
 }
